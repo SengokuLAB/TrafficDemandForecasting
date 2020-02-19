@@ -4,7 +4,7 @@ class Path:
     def __init__(self):
         ## paths
         self.path_1 = r"C:\\Users\\impor\\Documents\\SengokuLab\\private\\transportation\\data\\dev\\"
-        #self.path_2 = r""
+        self.path_2 = r"..\\..\\data\\dev\\"
 
         # select path
         if os.path.exists(self.path_1):
