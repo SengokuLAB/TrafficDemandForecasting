@@ -6,6 +6,9 @@ import scipy.linalg as la
 import numpy.linalg as la2
 import scipy.integrate as integrate 
 
+import sys
+sys.path.append('/content/drive/My Drive/Sengoku/TrafficAssignment/repository/code')
+
 import datapath
 datapath = datapath.Path()
 
@@ -29,20 +32,20 @@ def linearsearch(xa,ca,t0,ya):
 # main functions
 #### Step 1: Network Representation and Data Structure
 ## Define the link-node matrix 
-LinkNode = pd.read_csv(datapath.get_linknode())
+LinkNode = pd.read_csv(datapath.get_linknode(), index_col=0)
 LinkNode = LinkNode.values
 #print LinkNode
 #print LinkNode.shape()
 #print LinkNode
 
 ## Import Demand matrix (Q)
-Q = pd.read_csv(datapath.get_od())
+Q = pd.read_csv(datapath.get_od(), index_col=0)
 Q = Q.values
 #print Q
 
 ## create travel time vector (ta)
-n = 76 # number of total links
-k = 24 # number of total nodes
+n = 7545 # number of total links
+k = 3081 # number of total nodes
 
 
 ## create initial link flow vector (X)
@@ -54,7 +57,7 @@ s = (n,k) # 76 links, 24 nodes/origins
 #Y = np.zeros(s) # each entry represents the flow on link a from origin i 
 
 ## import the travel time coeff. estimation matrix (Coeff)
-coeff = pd.read_csv(datapath.get_coeff())
+coeff = pd.read_csv(datapath.get_coeff(), index_col=0)
 coeff = coeff.values
 #print coeff
 #print coeff.shape
@@ -80,18 +83,22 @@ s2 = (k,k)
 RHT = np.zeros(s2)# each row represents an origin, each column represents the flow on node k (with origin i )
 RHT = -Q
 np.fill_diagonal(RHT, origq) 
+del s2, origq
 #print RHT
 
 
 c0_0 = np.transpose(t0)
 c_0 = np.tile(c0_0,k)
+#del c0_0
 
 A0 = np.transpose(LinkNode) # Construct block matrix for A_eq
 A1 = [A0]*k
-A = la.block_diag(*A1) 
+del A0
+#A = la.block_diag(*A1) 
 #print A
 
 b0 = np.transpose(RHT)
+del RHT
 b = np.ravel(b0, order = 'F')[:,np.newaxis] # construct long b_eq
 
 ybounds = (0, None)
